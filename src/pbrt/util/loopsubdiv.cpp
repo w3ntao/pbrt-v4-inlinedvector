@@ -387,9 +387,9 @@ TriangleMesh *LoopSubdivide(const Transform *renderFromObject, bool reverseOrien
 static Point3f weightOneRing(SDVertex *vert, Float beta) {
     // Put _vert_ one-ring in _pRing_
     int valence = vert->valence();
-    InlinedVector<Point3f, 16> pRing(valence);
+    std::vector<Point3f> pRing(valence, Point3f());
 
-    vert->oneRing(pRing.data());
+    vert->oneRing(&pRing[0]);
     Point3f p = (1 - valence * beta) * vert->p;
     for (int i = 0; i < valence; ++i)
         p += beta * pRing[i];
@@ -420,9 +420,9 @@ void SDVertex::oneRing(Point3f *p) {
 static Point3f weightBoundary(SDVertex *vert, Float beta) {
     // Put _vert_ one-ring in _pRing_
     int valence = vert->valence();
-    InlinedVector<Point3f, 16> pRing(valence);
+    std::vector<Point3f> pRing(valence, Point3f());
 
-    vert->oneRing(pRing.data());
+    vert->oneRing(&pRing[0]);
     Point3f p = (1 - 2 * beta) * vert->p;
     p += beta * pRing[0];
     p += beta * pRing[valence - 1];
